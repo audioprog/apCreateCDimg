@@ -32,8 +32,6 @@ apCDMainWindow::apCDMainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-	this->setAcceptDrops(true);
-
 	QObject::connect(&this->progressTimer, &QTimer::timeout, this, [this]()
 	{
 		ui->labelSingleLile->setText(this->compress.getCurrentFile());
@@ -43,6 +41,9 @@ apCDMainWindow::apCDMainWindow(QWidget *parent) :
 		ui->progressBarFiles->setMaximum(qMax(1, this->compress.getAllFileCount()));
 		ui->progressBarFiles->setValue(this->compress.getFinishedCount());
 	});
+
+	QObject::connect(ui->frameFileDrop, &apFilePropFrame::signalDirsDropped, this, &apCDMainWindow::slotDirsDropped);
+	QObject::connect(ui->frameFileDrop, &apFilePropFrame::signalFilesDropped, this, &apCDMainWindow::slotFilesDropped);
 
 	this->progressTimer.start(500);
 }
@@ -54,45 +55,16 @@ apCDMainWindow::~apCDMainWindow()
 
 void apCDMainWindow::on_actionAktuelles_Jahr_triggered()
 {
-
+	//
 }
 
-void apCDMainWindow::dragEnterEvent(QDragEnterEvent* event)
+void apCDMainWindow::slotDirsDropped(QStringList dirList)
 {
-	if (event->mimeData()->urls().isEmpty())
-	{
-		event->ignore();
-		return;
-	}
-	event->acceptProposedAction();
+	//
 }
 
-void apCDMainWindow::dragMoveEvent(QDragMoveEvent* event)
+void apCDMainWindow::slotFilesDropped(QStringList fileList)
 {
-	if (event->mimeData()->urls().isEmpty())
-	{
-		event->ignore();
-		return;
-	}
-	event->acceptProposedAction();
+	this->compress.addFileList(fileList);
 }
 
-void apCDMainWindow::dropEvent(QDropEvent* event)
-{
-	if (event->mimeData()->urls().isEmpty())
-	{
-		event->ignore();
-		return;
-	}
-	event->acceptProposedAction();
-
-	for (const QUrl& url : event->mimeData()->urls())
-	{
-		if (url.isLocalFile()
-				&& (url.toString().endsWith(".wav", Qt::CaseInsensitive)
-					|| url.toString().endsWith(".mp3", Qt::CaseInsensitive)))
-		{
-			this->compress.addFile(url.toLocalFile());
-		}
-	}
-}

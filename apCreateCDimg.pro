@@ -26,11 +26,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         apCDMainWindow.cpp \
-    apCompress.cpp
+    apCompress.cpp \
+    apFilePropFrame.cpp \
+    apCollectFilesOfDirs.cpp \
+    apPathPartSelectorWidget.cpp
 
 HEADERS += \
         apCDMainWindow.h \
-    apCompress.h
+    apCompress.h \
+    apFilePropFrame.h \
+    apCollectFilesOfDirs.h \
+    apPathPartSelectorWidget.h
 
 FORMS += \
         apCDMainWindow.ui

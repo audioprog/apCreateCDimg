@@ -1,4 +1,4 @@
-/* (C) 2017 audioprog@users.noreply.github.com
+/* (C) 2017 web.n.work.ls(at)mailbox(.)org
 
    This is free software; you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License version
@@ -18,42 +18,37 @@
    License Version 1.1.  You may obtain a copy of the License at
    http://www.mozilla.org/MPL/
 */
-#ifndef APCDMAINWINDOW_H
-#define APCDMAINWINDOW_H
+#ifndef APFILEPROPFRAME_H
+#define APFILEPROPFRAME_H
 
+#include <QFrame>
 
-#include "apCompress.h"
-
-
-#include <QMainWindow>
-#include <QTimer>
-
-
-namespace Ui {
-class apCDMainWindow;
-}
-
-class apCDMainWindow : public QMainWindow
+class apFilePropFrame : public QFrame
 {
 	Q_OBJECT
 
 public:
-	explicit apCDMainWindow(QWidget *parent = 0);
-	~apCDMainWindow();
+	apFilePropFrame( QWidget* parent = Q_NULLPTR );
 
-private slots:
-	void on_actionAktuelles_Jahr_triggered();
+signals:
 
-	void slotDirsDropped( QStringList );
+	void signalFilesDropped( QStringList );
 
-	void slotFilesDropped( QStringList );
+	void signalDirsDropped( QStringList );
+
+public:
+
+	void addExtenstion( const QString& filter1 );
+
+	// QWidget interface
+protected:
+
+	void dragEnterEvent(QDragEnterEvent* event) override;
+	void dragMoveEvent(QDragMoveEvent* event) override;
+	void dropEvent(QDropEvent* event) override;
 
 private:
-	Ui::apCDMainWindow *ui;
-
-	apCompress compress;
-
-	QTimer progressTimer;
+	QStringList extensionFilter;
 };
 
-#endif // APCDMAINWINDOW_H
+#endif // APFILEPROPFRAME_H

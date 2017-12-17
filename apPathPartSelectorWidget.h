@@ -1,4 +1,4 @@
-/* (C) 2017 audioprog@users.noreply.github.com
+/* (C) 2017 web.n.work.ls(at)mailbox(.)org
 
    This is free software; you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License version
@@ -18,42 +18,47 @@
    License Version 1.1.  You may obtain a copy of the License at
    http://www.mozilla.org/MPL/
 */
-#ifndef APCDMAINWINDOW_H
-#define APCDMAINWINDOW_H
+#ifndef APPATHPARTSELECTORWIDGET_H
+#define APPATHPARTSELECTORWIDGET_H
 
+#include <QList>
+#include <QWidget>
+#include <QSignalMapper>
+#include <QToolButton>
 
-#include "apCompress.h"
+class QBoxLayout;
 
-
-#include <QMainWindow>
-#include <QTimer>
-
-
-namespace Ui {
-class apCDMainWindow;
-}
-
-class apCDMainWindow : public QMainWindow
+class apPathPartSelectorWidget : public QWidget
 {
 	Q_OBJECT
 
 public:
-	explicit apCDMainWindow(QWidget *parent = 0);
-	~apCDMainWindow();
+	explicit apPathPartSelectorWidget( QWidget *parent = nullptr );
+
+	void clear();
+
+	void getPath() const;
+
+	void setPath( const QString& );
+
+	void setSelection( const QString& );
+
+signals:
+
+	void signalSelected( QString );
 
 private slots:
-	void on_actionAktuelles_Jahr_triggered();
 
-	void slotDirsDropped( QStringList );
-
-	void slotFilesDropped( QStringList );
+	void slotButtonClicked( QWidget* );
 
 private:
-	Ui::apCDMainWindow *ui;
 
-	apCompress compress;
+	QList<QToolButton*> getButtons();
 
-	QTimer progressTimer;
+	QString selectedPath;
+
+	QSignalMapper buttonMapper;
+
 };
 
-#endif // APCDMAINWINDOW_H
+#endif // APPATHPARTSELECTORWIDGET_H
