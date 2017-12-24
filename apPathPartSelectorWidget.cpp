@@ -27,12 +27,16 @@ apPathPartSelectorWidget::apPathPartSelectorWidget(QWidget* parent)
 {
 	new QHBoxLayout(this);
 
+	this->layout()->setSpacing(0);
+
 	connect(&this->buttonMapper, QOverload<QWidget*>::of(&QSignalMapper::mapped), this, &apPathPartSelectorWidget::slotButtonClicked);
 }
 
 void apPathPartSelectorWidget::clear()
 {
 	QList<QWidget*> widgets;
+
+	QList<QSpacerItem*> spacerItems;
 
 	for (int i = 0; i < this->layout()->count(); i++)
 	{
@@ -42,6 +46,10 @@ void apPathPartSelectorWidget::clear()
 		{
 			widgets << widget;
 		}
+		else if (item->spacerItem())
+		{
+			spacerItems << item->spacerItem();
+		}
 	}
 
 	for (QWidget* widget : widgets)
@@ -49,9 +57,16 @@ void apPathPartSelectorWidget::clear()
 		this->layout()->removeWidget(widget);
 		widget->deleteLater();
 	}
+
+	for (QSpacerItem* spacer : spacerItems)
+	{
+		this->layout()->removeItem(spacer);
+
+		delete spacer;
+	}
 }
 
-void apPathPartSelectorWidget::getPath() const
+QString apPathPartSelectorWidget::getPath() const
 {
 	QList<QToolButton*> buttons = this->getButtons();
 
@@ -106,13 +121,46 @@ void apPathPartSelectorWidget::setPath(const QString& newPath)
 		else
 		{
 			stylesh += "border: none; ";
+			if (names.first() != name)
+			{
+				name = "/" + name;
+			}
 		}
 
-		QToolButton* button = new QToolButton(name);
+		QToolButton* button = new QToolButton();
+
+		button->setText(name);
 
 		button->setStyleSheet(stylesh + "}");
 
+		this->buttonMapper.setMapping(button, button);
+		connect(button, &QToolButton::clicked, &this->buttonMapper, QOverload<>::of(&QSignalMapper::map));
+
 		this->layout()->addWidget(button);
+	}
+
+	this->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding));
+}
+
+void apPathPartSelectorWidget::setSelection(const QString& newSelectedPath)
+{
+	if (this->selectedPath != newSelectedPath)
+	{
+		this->selectedPath = QString(newSelectedPath).replace('\\', '/');
+
+		QString oldPath = this->getPath();
+
+		if (oldPath != this->selectedPath || ! oldPath.startsWith(this->selectedPath + "/"))
+		{
+			oldPath = this->selectedPath;
+		}
+
+		this->setPath(oldPath);
+
+		if ( ! this->signalsBlocked())
+		{
+			emit signalSelected(this->selectedPath);
+		}
 	}
 }
 
@@ -122,10 +170,49 @@ void apPathPartSelectorWidget::slotButtonClicked(QWidget* widget)
 	if (button)
 	{
 		QList<QToolButton*> buttons = this->getButtons();
+
+		bool isSelection = true;
+
+		QString selected;
+
+		for (int i = 0; i < buttons.count(); i++)
+		{
+			QString stylesh = "QToolButton { ";
+			if (isSelection)
+			{
+				stylesh += "border-top: 2px solid black; border-bottom: 2px solid black; ";
+
+				if (i == 0)
+				{
+					stylesh += "border-left: 2px solid black; ";
+				}
+				if (buttons.at(i) == button)
+				{
+					stylesh += "border-right: 2px solid black; ";
+
+					isSelection = false;
+				}
+
+				selected += buttons.at(i)->text();
+			}
+			else
+			{
+				stylesh += "border: none; ";
+			}
+
+			buttons.at(i)->setStyleSheet(stylesh + "}");
+		}
+
+		this->selectedPath = selected;
+
+		if ( ! this->signalsBlocked())
+		{
+			emit signalSelected(this->selectedPath);
+		}
 	}
 }
 
-QList<QToolButton*> apPathPartSelectorWidget::getButtons()
+QList<QToolButton*> apPathPartSelectorWidget::getButtons() const
 {
 	QList<QToolButton*> toReturn;
 

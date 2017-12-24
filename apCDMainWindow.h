@@ -48,6 +48,8 @@ private slots:
 
 	void slotFilesDropped( QStringList );
 
+	void slotSelectSource();
+
 private:
 	Ui::apCDMainWindow *ui;
 

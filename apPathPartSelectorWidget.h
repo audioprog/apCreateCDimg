@@ -37,7 +37,7 @@ public:
 
 	void clear();
 
-	void getPath() const;
+	QString getPath() const;
 
 	void setPath( const QString& );
 
@@ -53,7 +53,7 @@ private slots:
 
 private:
 
-	QList<QToolButton*> getButtons();
+	QList<QToolButton*> getButtons() const;
 
 	QString selectedPath;
 

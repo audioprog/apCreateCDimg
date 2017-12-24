@@ -24,6 +24,7 @@
 #include <QDir>
 
 #include <qevent.h>
+#include <QFileDialog>
 #include <QMimeData>
 
 apCDMainWindow::apCDMainWindow(QWidget *parent) :
@@ -44,6 +45,8 @@ apCDMainWindow::apCDMainWindow(QWidget *parent) :
 
 	QObject::connect(ui->frameFileDrop, &apFilePropFrame::signalDirsDropped, this, &apCDMainWindow::slotDirsDropped);
 	QObject::connect(ui->frameFileDrop, &apFilePropFrame::signalFilesDropped, this, &apCDMainWindow::slotFilesDropped);
+
+	QObject::connect(ui->buttonSelectSource, &QToolButton::clicked, this, &apCDMainWindow::slotSelectSource);
 
 	this->progressTimer.start(500);
 }
@@ -68,3 +71,12 @@ void apCDMainWindow::slotFilesDropped(QStringList fileList)
 	this->compress.addFileList(fileList);
 }
 
+void apCDMainWindow::slotSelectSource()
+{
+	QString path = QFileDialog::getExistingDirectory(this, "Quellordner", ui->pathSelectorSource->getPath());
+
+	if ( ! path.isEmpty())
+	{
+		ui->pathSelectorSource->setPath(path);
+	}
+}

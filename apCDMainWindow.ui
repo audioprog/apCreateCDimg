@@ -29,47 +29,52 @@
        <attribute name="title">
         <string>Einstellungen</string>
        </attribute>
-       <widget class="QWidget" name="horizontalLayoutWidget">
-        <property name="geometry">
-         <rect>
-          <x>160</x>
-          <y>10</y>
-          <width>160</width>
-          <height>80</height>
-         </rect>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QLabel" name="label_4">
-           <property name="text">
-            <string>Quelle:</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="apFilePropFrame" name="frameDrop">
-        <property name="geometry">
-         <rect>
-          <x>250</x>
-          <y>240</y>
-          <width>120</width>
-          <height>70</height>
-         </rect>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>70</height>
-         </size>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::Box</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-       </widget>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Quelle:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="apPathPartSelectorWidget" name="pathSelectorSource" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="buttonSelectSource">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="apFilePropFrame" name="frameDrop">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>70</height>
+           </size>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Box</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -161,6 +166,12 @@
    <class>apFilePropFrame</class>
    <extends>QFrame</extends>
    <header>apFilePropFrame.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>apPathPartSelectorWidget</class>
+   <extends>QWidget</extends>
+   <header>apPathPartSelectorWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
