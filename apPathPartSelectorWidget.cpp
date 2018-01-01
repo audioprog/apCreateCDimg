@@ -74,7 +74,12 @@ QString apPathPartSelectorWidget::getPath() const
 
 	for (QToolButton* button : buttons)
 	{
-		path += button->text();
+		QString buttonText = button->text();
+		if (buttonText.startsWith("/ "))
+		{
+			buttonText = "/" + buttonText.mid(2);
+		}
+		path += buttonText;
 	}
 
 	return path;
@@ -105,17 +110,17 @@ void apPathPartSelectorWidget::setPath(const QString& newPath)
 			{
 				stylesh += "border-top: 2px solid black; border-bottom: 2px solid black; ";
 			}
+			if (selected.last() == name)
+			{
+				stylesh += "border-right: 2px solid black; ";
+			}
 			if (names.first() == name)
 			{
 				stylesh += "border-left: 2px solid black; ";
 			}
 			else
 			{
-				name = "/" + name;
-			}
-			if (selected.last() == name)
-			{
-				stylesh += "border-right: 2px solid black; ";
+				name = "/ " + name;
 			}
 		}
 		else
@@ -123,7 +128,7 @@ void apPathPartSelectorWidget::setPath(const QString& newPath)
 			stylesh += "border: none; ";
 			if (names.first() != name)
 			{
-				name = "/" + name;
+				name = "/ " + name;
 			}
 		}
 
@@ -193,7 +198,13 @@ void apPathPartSelectorWidget::slotButtonClicked(QWidget* widget)
 					isSelection = false;
 				}
 
-				selected += buttons.at(i)->text();
+				QString buttonText = buttons.at(i)->text();
+				if (buttonText.startsWith("/ "))
+				{
+					buttonText.remove(1, 1);
+				}
+
+				selected += buttonText;
 			}
 			else
 			{
